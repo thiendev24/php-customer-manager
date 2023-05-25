@@ -42,9 +42,9 @@
                         <div class="mb-3">
                             <label class="form-label" for="gender">Gender</label>
                             <select class="form-select" id="gender" name="gender">
-                                <option value="1">MALE</option>
-                                <option value="2">FEMALE</option>
-                                <option value="3">OTHER</option>
+                                <option value="MALE" <?= $customer->gender === "MALE" ? "selected" : "" ?>>MALE</option>
+                                <option value="FEMALE" <?= $customer->gender === "FEMALE" ? "selected" : "" ?>>FEMALE</option>
+                                <option value="OTHER" <?= $customer->gender === "OTHER" ? "selected" : "" ?>>OTHER</option>
                             </select>
                         </div>
                         <div class="d-flex justify-content-end">

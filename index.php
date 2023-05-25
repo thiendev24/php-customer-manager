@@ -34,7 +34,7 @@ $controller = new CustomerController();
         $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
         switch ($page) {
             case 'add':
-                $controller->add();
+                $controller->create();
                 break;
             case 'delete':
                 $controller->delete();

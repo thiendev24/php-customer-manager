@@ -20,11 +20,29 @@ class CustomerDB
 
     public function create(Customer $customer)
     {
-        $query = "INSERT INTO customers(name, email, address) VALUES (?, ?, ?);";
+        $genderId = 0;
+        $gender = $customer->getGender();
+        switch ($gender) {
+            case "MALE":
+                $genderId = 1;
+                break;
+            case "FEMALE":
+                $genderId = 2;
+                break;
+            case "OTHER":
+                $genderId = 3;
+                break;
+            default:
+                echo "Something wrong!";
+                break;
+        }
+
+        $query = "INSERT INTO customers(name, email, address, gender_id) VALUES (?, ?, ?, ?);";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(1, $customer->getName());
         $statement->bindParam(2, $customer->getEmail());
         $statement->bindParam(3, $customer->getAddress());
+        $statement->bindParam(4, $genderId);
 
         return $statement->execute();
     }
@@ -73,59 +91,72 @@ class CustomerDB
 
     public function update(int $id, Customer $customer)
     {
-        $sql = "UPDATE customers SET name = ?, email = ?, address = ? WHERE id = ?;";
+        $genderId = 0;
+        $gender = $customer->getGender();
+        switch ($gender) {
+            case "MALE":
+                $genderId = 1;
+                break;
+            case "FEMALE":
+                $genderId = 2;
+                break;
+            case "OTHER":
+                $genderId = 3;
+                break;
+            default:
+                echo "Something wrong!";
+                break;
+        }
+        $sql = "UPDATE customers SET name = ?, email = ?, address = ?, gender_id = ? WHERE id = ?;";
         $statement = $this->connection->prepare($sql);
         $statement->bindParam(1, $customer->getName());
         $statement->bindParam(2, $customer->getEmail());
         $statement->bindParam(3, $customer->getAddress());
-        $statement->bindParam(4, $id);
+        $statement->bindParam(4, $genderId);
+        $statement->bindParam(5, $id);
 
         return $statement->execute();
     }
 
-    // public function getAllPagination()
-    // {
-    //     $sql = "SELECT * FROM customers ";
+    public function getAllCustomersByQuery(string $query): array
+    {
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_OBJ);
+        $customers = [];
 
-    //     // $columns = array(
-    //     //     0 => 'id',
-    //     //     1 => 'name',
-    //     //     2 => 'email',
-    //     //     3 => 'address'
-    //     // );
+        foreach ($result as $item) {
+            $customer = new Customer(
+                $item->name,
+                $item->email,
+                $item->address,
+                $item->gender,
+            );
+            $customer->setId($item->id);
 
-    //     if ($_POST['length'] != -1) {
-    //         $start = $_POST['start'];
-    //         $length = $_POST['length'];
-    //         $sql .= " LIMIT  " . $start . ", " . $length;
-    //     }
+            $customers[] = $customer;
+        }
 
-    //     $statement = $this->connection->prepare($sql);
-    //     $statement->execute();
-    //     $result = $statement->fetchAll(PDO::FETCH_OBJ);
-    //     $customers = [];
+        return $customers;
+    }
 
-    //     foreach ($result as $item) {
-    //         $customer = new Customer(
-    //             $item->name,
-    //             $item->email,
-    //             $item->address
-    //         );
-    //         $customer->setId($item->id);
+    public function getAllPagination(int $start, int $length, int $draw)
+    {
+        $totalQuery = $this->getAll();
+        $totalAllRows = count($totalQuery);
 
-    //         $customers[] = $customer;
-    //     }
+        $query = "SELECT c.id, c.name, c.email, c.address, g.gender AS gender FROM `customers` AS c LEFT JOIN `gender` AS g ON c.gender_id = g.id";
 
-    //     $getAllCustomers = $this->getAll();
-    //     $total_all_rows = count($getAllCustomers);
+        $query .= " LIMIT  " . $start . ", " . $length;
 
-    //     $count_rows = count($customers);
-    //     $output = array(
-    //         'draw' => intval($_POST['draw']),
-    //         'recordsTotal' => $count_rows,
-    //         'recordsFiltered' =>   $total_all_rows,
-    //         'data' => $customers,
-    //     );
-    //     return json_encode($output);
-    // }
+        $customers = $this->getAllCustomersByQuery($query);
+        $countRows = count($customers);
+
+        return array(
+            'draw' => $draw,
+            'recordsTotal' => $countRows,
+            'recordsFiltered' =>   $totalAllRows,
+            'data' => $customers,
+        );
+    }
 }

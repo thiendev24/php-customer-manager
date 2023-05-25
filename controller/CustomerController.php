@@ -6,7 +6,6 @@ require_once 'model/DBConnection.php';
 require_once 'model/CustomerDB.php';
 require_once 'model/Customer.php';
 
-// use Model\DBConnection;
 use Model\CustomerDB;
 use Model\Customer;
 
@@ -21,10 +20,10 @@ class CustomerController
         $this->customerDB = new CustomerDB($connection->connect());
     }
 
-    public function add()
+    public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] === "GET") {
-            include 'view/create.php';
+            include_once 'view/create.php';
         } else {
             $errors = [];
             $fields = ["name", "email", "address"];
@@ -39,12 +38,13 @@ class CustomerController
                 $name = $_POST['name'];
                 $email = $_POST['email'];
                 $address = $_POST['address'];
-                $customer = new Customer($name, $email, $address);
+                $gender = $_POST['gender'];
+                $customer = new Customer($name, $email, $address, $gender);
 
                 $this->customerDB->create($customer);
                 header(self::HEADER);
             } else {
-                include 'view/add.php';
+                include_once 'view/add.php';
             }
         }
     }
@@ -61,7 +61,7 @@ class CustomerController
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $id = +$_GET['id'];
             $customer = $this->customerDB->get($id);
-            include 'view/edit.php';
+            include_once 'view/edit.php';
         } else {
             $errors = [];
             $fields = ['name', 'email', 'address'];
@@ -77,13 +77,14 @@ class CustomerController
                 $customer = new Customer(
                     $_POST['name'],
                     $_POST['email'],
-                    $_POST['address']
+                    $_POST['address'],
+                    $_POST['gender']
                 );
                 $this->customerDB->update($id, $customer);
                 header(self::HEADER);
             } else {
                 $customer = $this->customerDB->get($id);
-                include 'view/index.php';
+                include_once 'view/index.php';
             }
         }
     }

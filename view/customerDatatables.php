@@ -6,13 +6,8 @@ include_once 'model/DBConnection.php';
 include_once 'model/CustomerDB.php';
 
 use Model\CustomerDB;
-// use Model\DBConnection;
 
 $connection = new DBConnection();
-
-// "mysql:host=localhost:4306;dbname=customers",
-// 'root',
-// ''
 
 $customerDB = new CustomerDB($connection->connect());
 
@@ -52,14 +47,14 @@ $customers = $customerDB->getAll();
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            if (empty($customers)) {
-                            ?>
+                            <!-- <?php
+                                    if (empty($customers)) {
+                                    ?>
                                 <tr>
                                     <td colspan="5" class="text-center">No record found!</td>
                                 </tr>
                             <?php
-                            }
+                                    }
                             ?>
                             <?php foreach ($customers as $customer) : ?>
                                 <tr>
@@ -76,7 +71,7 @@ $customers = $customerDB->getAll();
                                             Update
                                         </a>
                                     </td>
-                                <?php endforeach; ?>
+                                <?php endforeach; ?> -->
                         </tbody>
                     </table>
                 </div>
@@ -85,28 +80,41 @@ $customers = $customerDB->getAll();
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <!-- <script src="../assets/datatables/v1.13.4/js/jquery.dataTables.min.js"></script> -->
-    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
-        // (() => {
-        //     $('#tbCustomers').DataTable({
-        //         "fnCreatedRow": function(nRow, aData, iDataIndex) {
-        //             $(nRow).attr('id', aData[0]);
-        //         },
-        //         'serverSide': 'true',
-        //         'processing': 'true',
-        //         'paging': 'true',
-        //         'ajax': {
-        //             'url': '../model/fetchDataTables.php',
-        //             'type': 'post',
-        //         },
-        //         "aoColumnDefs": [{
-        //             "bSortable": false,
-        //             "aTargets": [5]
-        //         }, ]
-        //     })
-        // })();
+        $(() => {
+            $('#tbCustomers').DataTable({
+                // "fnCreatedRow": function(nRow, aData, iDataIndex) {
+                //     $(nRow).attr('id', aData[0]);
+                // },
+                'serverSide': 'true',
+                'processing': 'true',
+                'paging': 'true',
+                'searching': false,
+                'ordering': false,
+                'ajax': {
+                    'url': '../model/fetchDataTables.php',
+                    'type': 'post',
+                    accept: 'application/json',
+                    contentType: 'application/json',
+                    data: function(d) {
+                        console.log(d);
+                        return JSON.stringify(d);
+                    }
+                },
+                // "aoColumnDefs": [{
+                //     "bSortable": false,
+                //     "aTargets": [5]
+                // }, ],
+                lengthMenu: [
+                    [3, 5, 10, 20],
+                    ["3", "5", "10", "20"]
+                ],
+            })
+        });
+
         $('.btnDeleteCustomer').click(function() {
             let id = $(this).val();
             Swal.fire({

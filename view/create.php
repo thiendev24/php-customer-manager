@@ -40,6 +40,14 @@
                                 <p class="text-danger"><?= $errors['address'] ?></p>
                             <?php endif; ?>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="gender">Gender</label>
+                            <select class="form-select" id="gender" name="gender">
+                                <option value="MALE">MALE</option>
+                                <option value="FEMALE">FEMALE</option>
+                                <option value="OTHER">OTHER</option>
+                            </select>
+                        </div>
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary">Create</button>
                             <button type="button" id="btnClear" class="btn btn-warning ms-2">Clear</button>
