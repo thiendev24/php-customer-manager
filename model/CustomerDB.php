@@ -13,6 +13,9 @@ class CustomerDB
 {
     private $connection;
 
+    private const INSERT_NEW_CUSTOMER = "INSERT INTO customers(name, email, address, gender_id) VALUES (?, ?, ?, ?);";
+    private const GET_ALL_CUSTOMER_PAGING = "SELECT c.id, c.name, c.email, c.address, g.gender AS gender FROM `customers` AS c LEFT JOIN `gender` AS g ON c.gender_id = g.id LIMIT ?, ?;";
+
     public function __construct($connection)
     {
         $this->connection = $connection;
@@ -37,8 +40,7 @@ class CustomerDB
                 break;
         }
 
-        $query = "INSERT INTO customers(name, email, address, gender_id) VALUES (?, ?, ?, ?);";
-        $statement = $this->connection->prepare($query);
+        $statement = $this->connection->prepare(SELF::INSERT_NEW_CUSTOMER);
         $statement->bindParam(1, $customer->getName());
         $statement->bindParam(2, $customer->getEmail());
         $statement->bindParam(3, $customer->getAddress());
@@ -118,9 +120,14 @@ class CustomerDB
         return $statement->execute();
     }
 
-    public function getAllCustomersByQuery(string $query): array
+    public function getAllCustomersByQuery(int $start, int $length): array
     {
-        $statement = $this->connection->prepare($query);
+        $offset = +$start;
+        $size = +$length;
+
+        $statement = $this->connection->prepare(self::GET_ALL_CUSTOMER_PAGING);
+        $statement->bindParam(1, $offset, PDO::PARAM_INT);
+        $statement->bindParam(2, $size, PDO::PARAM_INT);
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_OBJ);
         $customers = [];
@@ -133,8 +140,7 @@ class CustomerDB
                 $item->gender,
             );
             $customer->setId($item->id);
-
-            $customers[] = $customer;
+            array_push($customers, $customer);
         }
 
         return $customers;
@@ -145,18 +151,16 @@ class CustomerDB
         $totalQuery = $this->getAll();
         $totalAllRows = count($totalQuery);
 
-        $query = "SELECT c.id, c.name, c.email, c.address, g.gender AS gender FROM `customers` AS c LEFT JOIN `gender` AS g ON c.gender_id = g.id";
-
-        $query .= " LIMIT  " . $start . ", " . $length;
-
-        $customers = $this->getAllCustomersByQuery($query);
+        $customers = $this->getAllCustomersByQuery($start, $length);
         $countRows = count($customers);
+        // var_dump($customers);
+        // echo '</br>';
 
-        return array(
+        return [
             'draw' => $draw,
             'recordsTotal' => $countRows,
-            'recordsFiltered' =>   $totalAllRows,
+            'recordsFiltered' => $totalAllRows,
             'data' => $customers,
-        );
+        ];
     }
 }

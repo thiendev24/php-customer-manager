@@ -86,31 +86,19 @@ $customers = $customerDB->getAll();
     <script>
         $(() => {
             $('#tbCustomers').DataTable({
-                // "fnCreatedRow": function(nRow, aData, iDataIndex) {
-                //     $(nRow).attr('id', aData[0]);
-                // },
                 'serverSide': 'true',
                 'processing': 'true',
                 'paging': 'true',
                 'searching': false,
                 'ordering': false,
                 'ajax': {
-                    'url': '../model/fetchDataTables.php',
-                    'type': 'post',
-                    accept: 'application/json',
-                    contentType: 'application/json',
-                    data: function(d) {
-                        console.log(d);
-                        return JSON.stringify(d);
-                    }
+                    'url': 'model/server_processing.php',
+                    'type': 'POST',
+                    // "dataSrc": "data"
                 },
-                // "aoColumnDefs": [{
-                //     "bSortable": false,
-                //     "aTargets": [5]
-                // }, ],
                 lengthMenu: [
-                    [3, 5, 10, 20],
-                    ["3", "5", "10", "20"]
+                    [5, 10, 20],
+                    ["5", "10", "20"]
                 ],
             })
         });
