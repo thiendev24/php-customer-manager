@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Model;
 
-use Model\Gender;
-
 class Customer
 {
     private int $id;
@@ -14,7 +12,7 @@ class Customer
     private string $address;
     private string $gender;
 
-    public function __construct(string $name, string $email, string $address,  string $gender)
+    public function __construct(string $name, string $email, string $address, string $gender)
     {
         $this->name = $name;
         $this->email = $email;

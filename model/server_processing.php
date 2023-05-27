@@ -1,9 +1,7 @@
 <?php
 
-// DB table to use
 $table = 'customers';
 
-// Table's primary key
 $primaryKey = 'id';
 
 $columns = array(
@@ -32,22 +30,13 @@ $columns = array(
             return $gender;
         }
     ),
-    // array(
-    //     'db'        => 'salary',
-    //     'dt'        => 5,
-    //     'formatter' => function( $d, $row ) {
-    //         return '$'.number_format($d);
-    //     }
-    // )
 );
 
-// SQL server connection information
 $sql_details = array(
     'user' => 'root',
     'pass' => '',
     'db'   => 'customers',
-    'host' => 'localhost:4306'
-    // ,'charset' => 'utf8' // Depending on your PHP and MySQL config, you may need this
+    'host' => 'localhost:4306', 'charset' => 'utf8'
 );
 
 require_once '../utils/ssp.class.php';

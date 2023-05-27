@@ -67,7 +67,6 @@ $customers = $customerDB->getAll();
                 'ajax': {
                     'url': 'model/server_processing.php',
                     'type': 'POST',
-                    // "dataSrc": "data"
                 },
                 lengthMenu: [
                     [5, 10, 20],
@@ -105,11 +104,6 @@ $customers = $customerDB->getAll();
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Swal.fire(
-                        //     'Deleted!',
-                        //     'This customer has been deleted.',
-                        //     // 'success'
-                        //     )
                         Swal.fire({
                             position: 'top-end',
                             icon: 'success',
