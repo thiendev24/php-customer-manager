@@ -22,7 +22,6 @@ $customers = $customerDB->getAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer List</title>
 
-    <!-- <link rel="style/css" href="../assets/datatables/v1.13.4/css/jquery.dataTables.min.css" /> -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" crossorigin />
 </head>
 
@@ -47,31 +46,6 @@ $customers = $customerDB->getAll();
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <?php
-                                    if (empty($customers)) {
-                                    ?>
-                                <tr>
-                                    <td colspan="5" class="text-center">No record found!</td>
-                                </tr>
-                            <?php
-                                    }
-                            ?>
-                            <?php foreach ($customers as $customer) : ?>
-                                <tr>
-                                    <td><?= $customer->getId() ?></td>
-                                    <td><?= $customer->getName() ?></td>
-                                    <td><?= $customer->getEmail() ?></td>
-                                    <td><?= $customer->getAddress() ?></td>
-                                    <td><?= $customer->getGender() ?></td>
-                                    <td class="d-flex justify-content-around">
-                                        <button class="btn btn-danger btn-sm btnDeleteCustomer" type="button" value="<?= $customer->getId(); ?>">
-                                            Delete
-                                        </button>
-                                        <a href="./index.php?page=edit&id=<?= $customer->getId(); ?>" class="btn btn-primary btn-sm">
-                                            Update
-                                        </a>
-                                    </td>
-                                <?php endforeach; ?> -->
                         </tbody>
                     </table>
                 </div>
@@ -81,7 +55,6 @@ $customers = $customerDB->getAll();
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-    <!-- <script src="../assets/datatables/v1.13.4/js/jquery.dataTables.min.js"></script> -->
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
         $(() => {
@@ -100,31 +73,57 @@ $customers = $customerDB->getAll();
                     [5, 10, 20],
                     ["5", "10", "20"]
                 ],
+                columnDefs: [{
+                    targets: 5,
+                    render: function(data, type, row, meta) {
+                        return `<div class="d-flex justify-content-around">
+                                        <button class="btn btn-danger btn-sm btnDeleteCustomer" type="button" value=${row[0]}>
+                                            Delete
+                                        </button>
+                                        <a href="./index.php?page=edit&id=${row[0]}" class="btn btn-primary btn-sm">
+                                            Update
+                                        </a>
+                                    </div>`
+                    }
+                }, ],
+                drawCallback: () => {
+                    deleteCustomer();
+                }
             })
         });
 
-        $('.btnDeleteCustomer').click(function() {
-            let id = $(this).val();
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    console.log(id);
-                    location.href = `./index.php?page=delete&id=${id}`;
-                    Swal.fire(
-                        'Deleted!',
-                        'This customer has been deleted.',
-                        'success'
-                    )
-                }
+        function deleteCustomer() {
+            $('.btnDeleteCustomer').click(function() {
+                let id = $(this).val();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Swal.fire(
+                        //     'Deleted!',
+                        //     'This customer has been deleted.',
+                        //     // 'success'
+                        //     )
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'This customer has been deleted!',
+                            showConfirmButton: false,
+                            timer: 3000
+                        })
+                        setTimeout(() => {
+                            location.href = `./index.php?page=delete&id=${id}`;
+                        }, 3000)
+                    }
+                })
             })
-        })
+        }
     </script>
 </body>
 

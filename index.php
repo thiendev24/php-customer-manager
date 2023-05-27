@@ -1,8 +1,4 @@
 <?php
-// require 'model/DBConnection.php';
-// require 'model/CustomerDB.php';
-// require 'model/Customer.php';
-// namespace Controller;
 
 require_once 'controller/CustomerController.php';
 

@@ -50,7 +50,7 @@ $sql_details = array(
     // ,'charset' => 'utf8' // Depending on your PHP and MySQL config, you may need this
 );
 
-require_once 'ssp.class.php';
+require_once '../utils/ssp.class.php';
 
 echo json_encode(
     SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)

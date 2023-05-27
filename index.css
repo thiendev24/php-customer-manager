@@ -2,3 +2,15 @@ body {
     margin: 0;
     padding: 0;
 }
+
+#tbCustomers_length{
+    margin-bottom: 5px;
+}
+
+#tbCustomers{
+    border-top: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+#tbCustomers_paginate{
+    margin-top: 5px;
+}
