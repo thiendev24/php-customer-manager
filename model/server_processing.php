@@ -39,7 +39,7 @@ $sql_details = array(
     'host' => 'localhost:4306', 'charset' => 'utf8'
 );
 
-require_once '../utils/ssp.class.php';
+require_once '../utils/SSP.php';
 
 echo json_encode(
     SSP::simple($_POST, $sql_details, $table, $primaryKey, $columns)

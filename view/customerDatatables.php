@@ -76,13 +76,13 @@ $customers = $customerDB->getAll();
                     targets: 5,
                     render: function(data, type, row, meta) {
                         return `<div class="d-flex justify-content-around">
-                                        <button class="btn btn-danger btn-sm btnDeleteCustomer" type="button" value=${row[0]}>
-                                            Delete
-                                        </button>
-                                        <a href="./index.php?page=edit&id=${row[0]}" class="btn btn-primary btn-sm">
-                                            Update
-                                        </a>
-                                    </div>`
+                                    <button class="btn btn-danger btn-sm btnDeleteCustomer" type="button" value=${row[0]}>
+                                        Delete
+                                    </button>
+                                    <a href="./index.php?page=edit&id=${row[0]}" class="btn btn-primary btn-sm">
+                                        Update
+                                    </a>
+                                </div>`
                     }
                 }, ],
                 drawCallback: () => {
